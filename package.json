@@ -1,0 +1,54 @@
+{
+	"devDependencies": {
+		"@semantic-release/changelog": "^6.0.3",
+		"@semantic-release/git": "^10.0.1",
+		"@types/compression": "^1.7.3",
+		"@types/cookie-parser": "^1.4.4",
+		"@types/cors": "^2.8.14",
+		"@types/express": "^4.17.17",
+		"@types/node-cron": "^3.0.8",
+		"@types/uuid": "^9.0.4",
+		"@typescript-eslint/eslint-plugin": "^6.7.0",
+		"@typescript-eslint/parser": "^6.7.2",
+		"commitlint": "^17.7.1",
+		"commitlint-config-gitmoji": "^2.3.1",
+		"eslint": "^8.50.0",
+		"eslint-config-prettier": "^9.0.0",
+		"eslint-plugin-prettier": "^5.0.0",
+		"gitmoji-cli": "^8.5.0",
+		"prettier": "^3.0.3",
+		"prettier-plugin-organize-imports": "^3.2.3",
+		"prettier-plugin-toml": "^1.0.0",
+		"semantic-release": "^21.1.1",
+		"semantic-release-gitmoji": "^1.6.4",
+		"typescript": "^5.2.2"
+	},
+	"dependencies": {
+		"compression": "^1.7.4",
+		"cookie-parser": "^1.4.6",
+		"cors": "^2.8.5",
+		"express": "^4.18.2",
+		"http-terminator": "^3.2.0",
+		"node-cron": "^3.0.2",
+		"phaser": "^3.60.0",
+		"tsx": "^3.12.10",
+		"uuid": "^9.0.1",
+		"vite": "^4.4.5"
+	},
+	"engines": {
+		"node": "^16 || ^18"
+	},
+	"name": "hexcrawl",
+	"prettier": {
+		"plugins": [
+			"prettier-plugin-organize-imports",
+			"prettier-plugin-toml"
+		]
+	},
+	"private": true,
+	"scripts": {
+		"build": "vite build src/client --emptyOutDir --outDir ../../dist",
+		"start": "tsx src/server/index.ts"
+	},
+	"version": "0.0.1"
+}
