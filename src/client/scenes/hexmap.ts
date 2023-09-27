@@ -1,7 +1,6 @@
+import { TILE_SIZE } from "../constants";
 import terrainSprite from "../images/spritesheet.png";
 import mapFile from "../maps/map.json";
-
-const TILE_SIZE = 72;
 
 export default class HexMap extends Phaser.Scene {
 	constructor() {
