@@ -4,7 +4,6 @@ import mapFile from "./maps/map.json";
 
 const TILE_SIZE = 72;
 
-// tiles
 class Main extends Phaser.Scene {
 	constructor() {
 		super("scene-main");
@@ -26,8 +25,8 @@ class Main extends Phaser.Scene {
 		const layer = tilemap.createLayer(
 			"Terrain",
 			tileset,
-			-TILE_SIZE,
-			-TILE_SIZE,
+			-TILE_SIZE / 2,
+			-TILE_SIZE / 2,
 		)!;
 
 		layer.cullCallback = () =>
