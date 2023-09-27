@@ -31,7 +31,6 @@
 		"http-terminator": "^3.2.0",
 		"node-cron": "^3.0.2",
 		"phaser": "^3.60.0",
-		"phaser3-rex-plugins": "^1.60.5",
 		"tsx": "^3.12.10",
 		"uuid": "^9.0.1",
 		"vite": "^4.4.5"
@@ -48,7 +47,7 @@
 	},
 	"private": true,
 	"scripts": {
-		"build": "vite build src/client --emptyOutDir --outDir ../../dist",
+		"build": "vite build src/client -c src/client/vite.config.ts --emptyOutDir --outDir ../../dist",
 		"start": "tsx src/server/index.ts"
 	},
 	"version": "0.0.1"
