@@ -14,6 +14,7 @@ export default class HexMap extends Phaser.Scene {
 	}
 
 	preload() {
+		this.load.setBaseURL(location.pathname);
 		this.load.image("terrain", terrainSprite);
 		this.load.tilemapTiledJSON("map", mapFile);
 	}
