@@ -10,6 +10,7 @@ import {
 } from "../constants";
 import terrainSprite from "../images/spritesheet.png";
 import mapFile from "../maps/map.json";
+import { cullTiles } from "../util/layers";
 
 export default class HexMap extends Phaser.Scene {
 	constructor() {
@@ -45,20 +46,7 @@ export default class HexMap extends Phaser.Scene {
 		)!;
 		const layer = tilemap.createLayer("Terrain", tileset, 0, 0)!;
 
-		// cull tiles outside of camera bounds (with additional margin)
-		const cullTiles = (layer: Phaser.Tilemaps.TilemapLayer) => {
-			const bounds = cam.getBounds();
-			const heightOffset = (TILE_SIZE / 2) * 3;
-			const widthOffset = TILE_SIZE * 0.75 * 3;
-			return layer.getTilesWithin(
-				bounds.left - widthOffset,
-				bounds.top - heightOffset,
-				bounds.width + widthOffset * 2,
-				bounds.height + heightOffset * 2,
-			);
-		};
-
-		layer.cullCallback = () => cullTiles.call(this, layer);
+		layer.cullCallback = () => cullTiles(layer, cam);
 
 		cam.setOrigin(0.5, 0.5).setBounds(
 			// account for horizontal hex gap
