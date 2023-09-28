@@ -1,30 +1,16 @@
-import { Cameras } from "phaser";
 import {
 	DOUBLE_TAP_DELAY_MS,
 	LONG_PRESS_DELAY_MS,
 	TILE_SIZE,
-	ZOOM_FACTOR,
-	ZOOM_FACTOR_TAP,
-	ZOOM_MAX,
-	ZOOM_MIN,
 } from "../constants";
 import terrainSprite from "../images/spritesheet.png";
 import mapFile from "../maps/map.json";
+import { clampZoom } from "../util/camera";
 import { cullTiles } from "../util/layers";
 
 export default class HexMap extends Phaser.Scene {
 	constructor() {
 		super("scene-hexmap");
-	}
-
-	private clampZoom(
-		cam: Cameras.Scene2D.Camera,
-		zoomDir: -1 | 0 | 1,
-		tap = false,
-	) {
-		const factor = tap ? ZOOM_FACTOR_TAP : ZOOM_FACTOR;
-		const dist = zoomDir < 0 ? 1 - factor : 1 + factor;
-		cam.setZoom(Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, cam.zoom * dist)));
 	}
 
 	preload() {
@@ -48,6 +34,8 @@ export default class HexMap extends Phaser.Scene {
 
 		layer.cullCallback = () => cullTiles(layer, cam);
 
+		// --- camera/controls ---
+
 		cam.setOrigin(0.5, 0.5).setBounds(
 			// account for horizontal hex gap
 			TILE_SIZE / 4,
@@ -62,7 +50,7 @@ export default class HexMap extends Phaser.Scene {
 		// scroll
 		this.input.addListener("wheel", (ev: WheelEvent) => {
 			const zoomDir = ev.deltaY > 0 ? -1 : ev.deltaY < 0 ? 1 : 0;
-			this.clampZoom(cam, zoomDir);
+			clampZoom(cam, zoomDir);
 		});
 
 		let tapTime = 0;
@@ -71,7 +59,7 @@ export default class HexMap extends Phaser.Scene {
 
 		const longPressHandler = () => {
 			wasLongPress = true;
-			this.clampZoom(cam, -1, true);
+			clampZoom(cam, -1, true);
 		};
 
 		// drag
@@ -101,7 +89,7 @@ export default class HexMap extends Phaser.Scene {
 			// double tap
 			if (tapTime > 0 && p.time - tapTime < DOUBLE_TAP_DELAY_MS) {
 				tapTime = 0;
-				this.clampZoom(cam, 1, true);
+				clampZoom(cam, 1, true);
 				return;
 			}
 
