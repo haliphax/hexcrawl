@@ -77,6 +77,7 @@ export default class HexMap extends Phaser.Scene {
 			cam.scrollY -= (p.y - p.prevPosition.y) / cam.zoom;
 		});
 
+		// long press (start countdown; pointerup clears)
 		this.input.on("pointerdown", () => {
 			wasLongPress = false;
 			longPressTimer = setTimeout(longPressHandler, LONG_PRESS_DELAY_MS);
