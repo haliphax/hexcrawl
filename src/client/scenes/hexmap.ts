@@ -13,7 +13,7 @@ import mapFile from "../maps/map.json";
 
 export default class HexMap extends Phaser.Scene {
 	constructor() {
-		super("scene-main");
+		super("scene-hexmap");
 	}
 
 	private clampZoom(
