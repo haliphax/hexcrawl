@@ -32,6 +32,8 @@ export default class HexMap extends Phaser.Scene {
 	}
 
 	create() {
+		const cam = this.cameras.main;
+
 		// --- load map ---
 
 		const tilemap = this.make.tilemap({ key: "map" });
@@ -43,12 +45,20 @@ export default class HexMap extends Phaser.Scene {
 		)!;
 		const layer = tilemap.createLayer("Terrain", tileset, 0, 0)!;
 
-		layer.cullCallback = () =>
-			layer.getTilesWithin(0, 0, tilemap.width, tilemap.height);
+		// cull tiles outside of camera bounds (with additional margin)
+		const cullTiles = (layer: Phaser.Tilemaps.TilemapLayer) => {
+			const bounds = cam.getBounds();
+			const heightOffset = (TILE_SIZE / 2) * 3;
+			const widthOffset = TILE_SIZE * 0.75 * 3;
+			return layer.getTilesWithin(
+				bounds.left - widthOffset,
+				bounds.top - heightOffset,
+				bounds.width + widthOffset * 2,
+				bounds.height + heightOffset * 2,
+			);
+		};
 
-		// --- camera and controls ---
-
-		const cam = this.cameras.main;
+		layer.cullCallback = () => cullTiles.call(this, layer);
 
 		cam.setOrigin(0.5, 0.5).setBounds(
 			// account for horizontal hex gap
