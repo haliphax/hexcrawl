@@ -100,8 +100,16 @@ export default class HexMap extends Phaser.Scene {
 
 		// tap/click (select map tile)
 		const singleTapHandler = (x: number, y: number) => {
+			const lastSelectedTile = selectedTile;
+
 			selectedTile?.clearAlpha();
 			selectedTile = layer.getTileAtWorldXY(x, y - HEX_HEIGHT / 2);
+
+			if (selectedTile === lastSelectedTile) {
+				selectedTile = null;
+				return;
+			}
+
 			selectedTile?.setAlpha(0.5);
 		};
 
