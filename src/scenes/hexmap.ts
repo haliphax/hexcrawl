@@ -41,7 +41,7 @@ export default class HexMap extends Phaser.Scene {
 
 		layer.cullCallback = () => cullTiles(layer, cam);
 
-		// --- camera/controls ---
+		// --- camera ---
 
 		const boundsLeft = TILE_WIDTH / 2;
 		const boundsTop = TILE_HEIGHT - HEX_HEIGHT * 0.75;
@@ -57,26 +57,18 @@ export default class HexMap extends Phaser.Scene {
 			layer.displayHeight - HEX_HEIGHT * 8.25,
 		);
 
-		// scroll
-		this.input.addListener("wheel", (ev: WheelEvent) => {
-			const zoomDir = ev.deltaY > 0 ? -1 : ev.deltaY < 0 ? 1 : 0;
-			clampZoom(cam, zoomDir);
-		});
+		// --- controls ---
 
 		let tapTime = 0;
 		let longPressTimer: NodeJS.Timeout;
 		let singleTapTimer: NodeJS.Timeout;
 		let wasLongPress = false;
 
-		const longPressHandler = () => {
-			wasLongPress = true;
-			clearTimeout(singleTapTimer);
-			clampZoom(cam, -1, true);
-		};
-
-		const singleTapHandler = (x: number, y: number) => {
-			layer.getTileAtWorldXY(x, y - HEX_HEIGHT / 2).setVisible(false);
-		};
+		// scroll
+		this.input.addListener("wheel", (ev: WheelEvent) => {
+			const zoomDir = ev.deltaY > 0 ? -1 : ev.deltaY < 0 ? 1 : 0;
+			clampZoom(cam, zoomDir);
+		});
 
 		// drag
 		this.input.on(
@@ -96,23 +88,36 @@ export default class HexMap extends Phaser.Scene {
 			},
 		);
 
-		// long press (start countdown; pointerup clears)
+		// long press (zoom out)
+		const longPressHandler = () => {
+			wasLongPress = true;
+			clearTimeout(singleTapTimer);
+			clampZoom(cam, -1, true);
+		};
+
+		const singleTapHandler = (x: number, y: number) =>
+			layer.getTileAtWorldXY(x, y - HEX_HEIGHT / 2).setAlpha(0.5);
+
+		// mouse/tap down; start long press countdown
 		this.input.on(Phaser.Input.Events.POINTER_DOWN, () => {
 			wasLongPress = false;
 			longPressTimer = setTimeout(longPressHandler, LONG_PRESS_DELAY_MS);
 		});
 
-		// tap/click
+		// mouse/tap up; handle single/double/long
 		this.input.on(
 			Phaser.Input.Events.GAMEOBJECT_POINTER_UP,
 			function (this: Phaser.GameObjects.GameObject, p: Phaser.Input.Pointer) {
+				const [x, y] = [p.worldX, p.worldY];
+
 				clearTimeout(longPressTimer);
 
+				// ignore "wiggle"
 				if (p.getDistance() > 24) {
 					return;
 				}
 
-				// double tap
+				// double tap (zoom in)
 				if (tapTime > 0 && p.time - tapTime < DOUBLE_TAP_DELAY_MS) {
 					tapTime = 0;
 					clearTimeout(singleTapTimer);
@@ -120,15 +125,14 @@ export default class HexMap extends Phaser.Scene {
 					return;
 				}
 
-				// long press; discard
+				// long press; discard pointerup event
 				if (wasLongPress) {
 					tapTime = 0;
 					return;
 				}
 
-				// first tap
+				// first tap; start single tap countdown
 				tapTime = p.time;
-				const [x, y] = [p.worldX, p.worldY];
 				singleTapTimer = setTimeout(
 					() => singleTapHandler(x, y),
 					DOUBLE_TAP_DELAY_MS,
