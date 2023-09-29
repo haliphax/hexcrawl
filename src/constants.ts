@@ -1,7 +1,7 @@
-export const DOUBLE_TAP_DELAY_MS = 500;
+export const DOUBLE_TAP_DELAY_MS = 250;
 export const HEX_HEIGHT = 52;
 export const HEX_WIDTH = 60;
-export const LONG_PRESS_DELAY_MS = 750;
+export const LONG_PRESS_DELAY_MS = 500;
 export const TILE_HEIGHT = 80;
 export const TILE_WIDTH = 60;
 export const ZOOM_FACTOR = 0.1;

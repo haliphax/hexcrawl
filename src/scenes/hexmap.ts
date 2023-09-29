@@ -65,11 +65,17 @@ export default class HexMap extends Phaser.Scene {
 
 		let tapTime = 0;
 		let longPressTimer: NodeJS.Timeout;
+		let singleTapTimer: NodeJS.Timeout;
 		let wasLongPress = false;
 
 		const longPressHandler = () => {
 			wasLongPress = true;
+			clearTimeout(singleTapTimer);
 			clampZoom(cam, -1, true);
+		};
+
+		const singleTapHandler = (x: number, y: number) => {
+			layer.getTileAtWorldXY(x, y - HEX_HEIGHT / 2).setVisible(false);
 		};
 
 		// drag
@@ -109,6 +115,7 @@ export default class HexMap extends Phaser.Scene {
 				// double tap
 				if (tapTime > 0 && p.time - tapTime < DOUBLE_TAP_DELAY_MS) {
 					tapTime = 0;
+					clearTimeout(singleTapTimer);
 					clampZoom(cam, 1, true);
 					return;
 				}
@@ -119,11 +126,13 @@ export default class HexMap extends Phaser.Scene {
 					return;
 				}
 
-				// single tap
+				// first tap
 				tapTime = p.time;
-				layer
-					.getTileAtWorldXY(p.worldX, p.worldY - HEX_HEIGHT / 2)
-					.setVisible(false);
+				const [x, y] = [p.worldX, p.worldY];
+				singleTapTimer = setTimeout(
+					() => singleTapHandler(x, y),
+					DOUBLE_TAP_DELAY_MS,
+				);
 			},
 		);
 	}
