@@ -9,7 +9,7 @@ import {
 import terrainSprite from "../images/terrain.png";
 import mapFile from "../maps/map.json";
 import { clampZoom } from "../util/camera";
-import { cullTiles } from "../util/layers";
+import { cullTiles, tilesWithinRadius } from "../util/layers";
 
 export default class HexMap extends Phaser.Scene {
 	constructor() {
@@ -35,8 +35,10 @@ export default class HexMap extends Phaser.Scene {
 			TILE_HEIGHT,
 		)!;
 		const layer = tilemap.createLayer("Terrain", tileset, 0, 0)!;
+		let radius = 4;
 
-		layer.cullCallback = () => cullTiles(layer, cam);
+		layer.cullCallback = () =>
+			tilesWithinRadius(radius, selectedTile, cullTiles(layer, cam));
 
 		// --- camera ---
 
@@ -107,6 +109,7 @@ export default class HexMap extends Phaser.Scene {
 			}
 
 			selectedTile?.setAlpha(0.5);
+			radius = Math.floor(Math.random() * 8) + 1;
 		};
 
 		// mouse/tap down; start long press countdown

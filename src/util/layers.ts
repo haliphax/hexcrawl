@@ -1,5 +1,6 @@
-import { Cameras } from "phaser";
+import { Cameras, Tilemaps } from "phaser";
 import { HEX_HEIGHT, HEX_WIDTH } from "../constants";
+import { hexagonalDistance } from "./hex";
 
 /** cull tiles outside of camera bounds (with additional margin) */
 export const cullTiles = (
@@ -18,4 +19,17 @@ export const cullTiles = (
 			bounds.height + heightOffset * 2,
 		)
 		.filter((tile) => tile.visible);
+};
+
+/** get tiles within provided radius from center tile */
+export const tilesWithinRadius = (
+	radius: number,
+	centerTile: Tilemaps.Tile | null,
+	tiles: Tilemaps.Tile[],
+) => {
+	if (!centerTile) return tiles;
+
+	return tiles.filter(
+		(t) => hexagonalDistance(centerTile.x, centerTile.y, t.x, t.y) <= radius,
+	);
 };
