@@ -1,9 +1,11 @@
 import {
 	DOUBLE_TAP_DELAY_MS,
+	HEX_HEIGHT,
 	LONG_PRESS_DELAY_MS,
-	TILE_SIZE,
+	TILE_HEIGHT,
+	TILE_WIDTH,
 } from "../constants";
-import terrainSprite from "../images/spritesheet.png";
+import terrainSprite from "../images/terrain.png";
 import mapFile from "../maps/map.json";
 import { clampZoom } from "../util/camera";
 import { cullTiles } from "../util/layers";
@@ -28,24 +30,31 @@ export default class HexMap extends Phaser.Scene {
 		const tileset = tilemap.addTilesetImage(
 			"terrain_tiles",
 			"terrain",
-			TILE_SIZE,
-			TILE_SIZE,
+			TILE_WIDTH,
+			TILE_HEIGHT,
 		)!;
 		const layer = tilemap.createLayer("Terrain", tileset, 0, 0)!;
+
+		for (const t of layer.getTilesWithin()) {
+			t.updatePixelXY();
+		}
 
 		layer.cullCallback = () => cullTiles(layer, cam);
 
 		// --- camera/controls ---
 
+		const boundsLeft = TILE_WIDTH / 2;
+		const boundsTop = TILE_HEIGHT - HEX_HEIGHT * 0.75;
+
 		cam.setOrigin(0.5, 0.5).setBounds(
 			// account for horizontal hex gap
-			TILE_SIZE / 4,
+			boundsLeft,
 			// account for vertical hex gap
-			TILE_SIZE / 2,
-			// account for tile width overlap
-			tilemap.width * (TILE_SIZE * 0.75) - TILE_SIZE,
-			// account for tile height overlap
-			tilemap.height * TILE_SIZE - TILE_SIZE / 2,
+			boundsTop,
+			// account for grid width overlap
+			layer.displayWidth - boundsLeft * 2,
+			// account for grid height overlap
+			layer.displayHeight - HEX_HEIGHT * 8.25,
 		);
 
 		// scroll
@@ -64,45 +73,58 @@ export default class HexMap extends Phaser.Scene {
 		};
 
 		// drag
-		this.input.on("pointermove", (p: Phaser.Input.Pointer) => {
-			if (!p.isDown) {
-				return;
-			}
+		this.input.on(
+			Phaser.Input.Events.POINTER_MOVE,
+			(p: Phaser.Input.Pointer) => {
+				if (!p.isDown) {
+					return;
+				}
 
-			if (p.getDistance() < 24) {
-				return;
-			}
+				if (p.getDistance() < 24) {
+					return;
+				}
 
-			clearTimeout(longPressTimer);
-			cam.scrollX -= (p.x - p.prevPosition.x) / cam.zoom;
-			cam.scrollY -= (p.y - p.prevPosition.y) / cam.zoom;
-		});
+				clearTimeout(longPressTimer);
+				cam.scrollX -= (p.x - p.prevPosition.x) / cam.zoom;
+				cam.scrollY -= (p.y - p.prevPosition.y) / cam.zoom;
+			},
+		);
 
 		// long press (start countdown; pointerup clears)
-		this.input.on("pointerdown", () => {
+		this.input.on(Phaser.Input.Events.POINTER_DOWN, () => {
 			wasLongPress = false;
 			longPressTimer = setTimeout(longPressHandler, LONG_PRESS_DELAY_MS);
 		});
 
 		// tap/click
-		this.input.on("pointerup", (p: Phaser.Input.Pointer) => {
-			clearTimeout(longPressTimer);
+		this.input.on(
+			Phaser.Input.Events.GAMEOBJECT_POINTER_UP,
+			function (this: Phaser.GameObjects.GameObject, p: Phaser.Input.Pointer) {
+				clearTimeout(longPressTimer);
 
-			// double tap
-			if (tapTime > 0 && p.time - tapTime < DOUBLE_TAP_DELAY_MS) {
-				tapTime = 0;
-				clampZoom(cam, 1, true);
-				return;
-			}
+				if (p.getDistance() > 24) {
+					return;
+				}
 
-			// long press; discard
-			if (wasLongPress) {
-				tapTime = 0;
-				return;
-			}
+				// double tap
+				if (tapTime > 0 && p.time - tapTime < DOUBLE_TAP_DELAY_MS) {
+					tapTime = 0;
+					clampZoom(cam, 1, true);
+					return;
+				}
 
-			// single tap
-			tapTime = p.time;
-		});
+				// long press; discard
+				if (wasLongPress) {
+					tapTime = 0;
+					return;
+				}
+
+				// single tap
+				tapTime = p.time;
+				layer
+					.getTileAtWorldXY(p.worldX, p.worldY - HEX_HEIGHT / 2)
+					.setVisible(false);
+			},
+		);
 	}
 }

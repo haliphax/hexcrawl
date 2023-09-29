@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import HexMap from "./scenes/hexmap";
 
 const config: Phaser.Types.Core.GameConfig = {
-	antialias: false,
+	antialias: true,
 	fps: {
 		target: 30,
 	},
