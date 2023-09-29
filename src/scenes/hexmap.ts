@@ -1,3 +1,4 @@
+import { Tilemaps } from "phaser";
 import {
 	DOUBLE_TAP_DELAY_MS,
 	HEX_HEIGHT,
@@ -59,16 +60,13 @@ export default class HexMap extends Phaser.Scene {
 
 		// --- controls ---
 
-		let tapTime = 0;
-		let longPressTimer: NodeJS.Timeout;
-		let singleTapTimer: NodeJS.Timeout;
-		let wasLongPress = false;
-
 		// scroll
 		this.input.addListener("wheel", (ev: WheelEvent) => {
 			const zoomDir = ev.deltaY > 0 ? -1 : ev.deltaY < 0 ? 1 : 0;
 			clampZoom(cam, zoomDir);
 		});
+
+		let longPressTimer: NodeJS.Timeout;
 
 		// drag
 		this.input.on(
@@ -88,6 +86,9 @@ export default class HexMap extends Phaser.Scene {
 			},
 		);
 
+		let singleTapTimer: NodeJS.Timeout;
+		let wasLongPress = false;
+
 		// long press (zoom out)
 		const longPressHandler = () => {
 			wasLongPress = true;
@@ -95,14 +96,22 @@ export default class HexMap extends Phaser.Scene {
 			clampZoom(cam, -1, true);
 		};
 
-		const singleTapHandler = (x: number, y: number) =>
-			layer.getTileAtWorldXY(x, y - HEX_HEIGHT / 2).setAlpha(0.5);
+		let selectedTile: Tilemaps.Tile | null;
+
+		// tap/click (select map tile)
+		const singleTapHandler = (x: number, y: number) => {
+			selectedTile?.clearAlpha();
+			selectedTile = layer.getTileAtWorldXY(x, y - HEX_HEIGHT / 2);
+			selectedTile?.setAlpha(0.5);
+		};
 
 		// mouse/tap down; start long press countdown
 		this.input.on(Phaser.Input.Events.POINTER_DOWN, () => {
 			wasLongPress = false;
 			longPressTimer = setTimeout(longPressHandler, LONG_PRESS_DELAY_MS);
 		});
+
+		let tapTime = 0;
 
 		// mouse/tap up; handle single/double/long
 		this.input.on(
