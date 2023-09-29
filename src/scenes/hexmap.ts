@@ -9,6 +9,7 @@ import {
 import terrainSprite from "../images/terrain.png";
 import mapFile from "../maps/map.json";
 import { clampZoom } from "../util/camera";
+import { hexagonalDistance } from "../util/hex";
 import { cullTiles, tilesWithinRadius } from "../util/layers";
 
 export default class HexMap extends Phaser.Scene {
@@ -35,6 +36,33 @@ export default class HexMap extends Phaser.Scene {
 			TILE_HEIGHT,
 		)!;
 		const layer = tilemap.createLayer("Terrain", tileset, 0, 0)!;
+		const labels: Array<Phaser.GameObjects.Text> = [];
+
+		for (const t of layer.getTilesWithin()) {
+			t.properties.distText = this.add
+				.text(
+					t.pixelX + TILE_WIDTH / 2,
+					t.pixelY + TILE_HEIGHT - HEX_HEIGHT / 2,
+					"X",
+					{
+						backgroundColor: "#000",
+						color: "#fff",
+						fontSize: 14,
+						padding: {
+							bottom: 2,
+							left: 2,
+							right: 2,
+							top: 2,
+						},
+					},
+				)
+				.setAlpha(0.9)
+				.setOrigin(0.5, 0.5)
+				.setVisible(false);
+
+			labels.push(t.properties.distText);
+		}
+
 		let radius = 4;
 
 		layer.cullCallback = () =>
@@ -104,12 +132,39 @@ export default class HexMap extends Phaser.Scene {
 			selectedTile = layer.getTileAtWorldXY(x, y - HEX_HEIGHT / 2);
 
 			if (selectedTile === lastSelectedTile) {
+				for (const l of labels) {
+					l.setVisible(false);
+				}
+
 				selectedTile = null;
 				return;
 			}
 
+			if (lastSelectedTile) {
+				for (const l of labels) {
+					l.setVisible(false);
+				}
+			}
+
 			selectedTile?.setAlpha(0.5);
 			radius = Math.floor(Math.random() * 8) + 1;
+
+			for (const t of tilesWithinRadius(
+				radius,
+				selectedTile,
+				layer.getTilesWithin(),
+			)) {
+				(t.properties.distText as Phaser.GameObjects.Text)
+					.setVisible(true)
+					.setText(
+						hexagonalDistance(
+							selectedTile.x,
+							selectedTile.y,
+							t.x,
+							t.y,
+						).toString(),
+					);
+			}
 		};
 
 		// mouse/tap down; start long press countdown
