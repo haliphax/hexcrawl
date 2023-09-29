@@ -36,10 +36,6 @@ export default class HexMap extends Phaser.Scene {
 		)!;
 		const layer = tilemap.createLayer("Terrain", tileset, 0, 0)!;
 
-		for (const t of layer.getTilesWithin()) {
-			t.updatePixelXY();
-		}
-
 		layer.cullCallback = () => cullTiles(layer, cam);
 
 		// --- camera ---
