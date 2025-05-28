@@ -1,6 +1,11 @@
 module.exports = {
 	extends: ["gitmoji"],
-	parserPreset: "./.commitlintparser.js",
+	parserPreset: {
+		parserOpts: {
+			headerPattern: /^[^ ]+ (.*)$/,
+			headerCorrespondence: ["subject"],
+		},
+	},
 	rules: {
 		"type-empty": [0, "always"],
 	},
