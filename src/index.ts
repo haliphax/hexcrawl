@@ -18,12 +18,28 @@ const config = (): Phaser.Types.Core.GameConfig => ({
 	width: window.innerWidth,
 });
 
+let game: Phaser.Game;
+
 document.body.addEventListener(
 	"click",
 	async () => {
 		document.querySelector("h1")?.remove();
 		await document.body.requestFullscreen();
-		new Phaser.Game(config());
+		game = new Phaser.Game(config());
 	},
 	{ once: true },
 );
+
+// resize game viewport on viewport resize (portrait to landscape, etc.)
+const resizeWindow = () =>
+	game.scale.resize(window.innerWidth, window.innerHeight);
+
+let resizeWindowTimeout: NodeJS.Timeout | null = null;
+
+window.addEventListener("resize", () => {
+	if (resizeWindowTimeout) {
+		clearTimeout(resizeWindowTimeout);
+	}
+
+	resizeWindowTimeout = setTimeout(resizeWindow, 500);
+});
