@@ -1,5 +1,6 @@
 import { Tilemaps } from "phaser";
 import {
+	COLORS,
 	DOUBLE_TAP_DELAY_MS,
 	HEX_HEIGHT,
 	LONG_PRESS_DELAY_MS,
@@ -136,7 +137,7 @@ export default class HexMap extends Phaser.Scene {
 				}
 
 				for (const t of tiles) {
-					t.clearAlpha();
+					t.tint = 0xffffff;
 				}
 
 				selectedTile = null;
@@ -164,13 +165,9 @@ export default class HexMap extends Phaser.Scene {
 				);
 
 				if (dist > radius) {
-					/*
-					TODO use overlay object to de-emphasize tiles to avoid sprite bleed
-					(reducing the alpha leads to "bright spots" where sprites overlap)
-					*/
-					t.setAlpha(0.5);
+					t.tint = COLORS.TINTED;
 				} else {
-					t.clearAlpha();
+					t.tint = 0xffffff;
 					(t.properties.distText as Phaser.GameObjects.Text)
 						.setVisible(true)
 						.setText(

@@ -1,3 +1,7 @@
+export const COLORS = {
+	TINTED: 0x777777,
+};
+
 export const DOUBLE_TAP_DELAY_MS = 250;
 export const HEX_HEIGHT = 52;
 export const HEX_WIDTH = 60;
