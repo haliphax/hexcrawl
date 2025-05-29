@@ -1,6 +1,6 @@
+import { HEX_HEIGHT, HEX_WIDTH } from "@/constants";
+import { hexagonalDistance } from "@/util/hex";
 import { Cameras, Tilemaps } from "phaser";
-import { HEX_HEIGHT, HEX_WIDTH } from "../constants";
-import { hexagonalDistance } from "./hex";
 
 /** cull tiles outside of camera bounds (with additional margin) */
 export const cullTiles = (

@@ -13,4 +13,9 @@ export default defineConfig({
 		createHtmlPlugin({ minify: true }),
 		viteSingleFile({ removeViteModuleLoader: true }),
 	],
+	resolve: {
+		alias: {
+			"@": path.resolve(__dirname),
+		},
+	},
 });

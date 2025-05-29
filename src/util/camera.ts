@@ -1,5 +1,5 @@
+import { ZOOM_FACTOR, ZOOM_FACTOR_TAP, ZOOM_MAX, ZOOM_MIN } from "@/constants";
 import { Cameras } from "phaser";
-import { ZOOM_FACTOR, ZOOM_FACTOR_TAP, ZOOM_MAX, ZOOM_MIN } from "../constants";
 
 /** adjust camera zoom, clamped within defined min/max values */
 export const clampZoom = (

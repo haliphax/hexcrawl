@@ -1,43 +1,27 @@
 {
 	"compilerOptions": {
 		"allowImportingTsExtensions": true,
+		"baseUrl": "./",
 		"experimentalDecorators": true,
 		"isolatedModules": true,
-		"jsx": "preserve",
-		"lib": [
-			"ESNext",
-			"DOM",
-			"DOM.Iterable"
-		],
+		"lib": ["ES2020", "DOM", "DOM.Iterable"],
 		"module": "ESNext",
 		"moduleResolution": "bundler",
 		"noEmit": true,
 		"noFallthroughCasesInSwitch": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
+		"paths": {
+			"@/*": ["src/*"]
+		},
 		"resolveJsonModule": true,
 		"resolvePackageJsonExports": false,
 		"skipLibCheck": true,
 		"strict": true,
-		"target": "ESNext",
-		"types": [
-			"vite/client"
-		],
+		"target": "ES2020",
+		"types": ["vite/client", "phaser"],
 		"useDefineForClassFields": true
 	},
-	"typeRoots": [
-		"node_modules/@types"
-	],
-	"types": [
-		"Phaser"
-	],
-	"include": [
-		"src/*.ts",
-		"src/*.d.ts",
-		"src/*.tsx",
-		"src/**/*.ts",
-		"src/**/*.d.ts",
-		"src/**/*.tsx",
-		"vite.config.ts"
-	]
+	"files": ["node_modules/phaser/types/phaser.d.ts"],
+	"include": ["**/*.ts", "**/*.d.ts"]
 }

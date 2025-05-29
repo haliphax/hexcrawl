@@ -1,4 +1,3 @@
-import { Tilemaps } from "phaser";
 import {
 	COLORS,
 	DOUBLE_TAP_DELAY_MS,
@@ -6,13 +5,14 @@ import {
 	LONG_PRESS_DELAY_MS,
 	TILE_HEIGHT,
 	TILE_WIDTH,
-} from "../constants";
-import terrainSprite from "../images/terrain.png";
-import mapFile from "../maps/map.json";
-import { clampZoom } from "../util/camera";
-import { hexagonalDistance } from "../util/hex";
+} from "@/constants";
+import terrainSprite from "@/images/terrain.png";
+import mapFile from "@/maps/map.json";
+import { clampZoom } from "@/util/camera";
+import { hexagonalDistance } from "@/util/hex";
+import { Scene, Tilemaps } from "phaser";
 
-export default class HexMap extends Phaser.Scene {
+export default class HexMap extends Scene {
 	constructor() {
 		super("scene-hexmap");
 	}

@@ -1,5 +1,5 @@
+import HexMap from "@/scenes/hexmap";
 import Phaser from "phaser";
-import HexMap from "./scenes/hexmap";
 
 const config = (): Phaser.Types.Core.GameConfig => ({
 	antialias: true,
