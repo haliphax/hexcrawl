@@ -40,7 +40,7 @@
 		"*": [
 			"prettier -luw"
 		],
-		"*.{cjs,cts,mjs,mts,ts,vue}": [
+		"*.{js,ts}": [
 			"eslint --fix"
 		]
 	},
