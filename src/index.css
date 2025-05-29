@@ -1,6 +1,7 @@
 body,
 html {
 	background-color: #000;
+	color: #999;
 	height: 100vh;
 	image-rendering: optimizeQuality;
 	/*
