@@ -154,6 +154,7 @@ export default class HexMap extends Scene {
 
 			for (const t of tiles) {
 				if (t === selectedTile) {
+					t.tint = 0xffffff;
 					continue;
 				}
 
