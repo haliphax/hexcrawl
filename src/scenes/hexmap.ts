@@ -10,7 +10,6 @@ import terrainSprite from "../images/terrain.png";
 import mapFile from "../maps/map.json";
 import { clampZoom } from "../util/camera";
 import { hexagonalDistance } from "../util/hex";
-import { cullTiles, tilesWithinRadius } from "../util/layers";
 
 export default class HexMap extends Phaser.Scene {
 	constructor() {
@@ -65,8 +64,8 @@ export default class HexMap extends Phaser.Scene {
 
 		let radius = 4;
 
-		layer.cullCallback = () =>
-			tilesWithinRadius(radius, selectedTile, cullTiles(layer, cam));
+		//layer.cullCallback = () =>
+		//	tilesWithinRadius(radius, selectedTile, cullTiles(layer, cam));
 
 		// --- camera ---
 
@@ -126,14 +125,18 @@ export default class HexMap extends Phaser.Scene {
 
 		// tap/click (select map tile)
 		const singleTapHandler = (x: number, y: number) => {
+			const tiles = layer.getTilesWithin();
 			const lastSelectedTile = selectedTile;
 
-			selectedTile?.clearAlpha();
 			selectedTile = layer.getTileAtWorldXY(x, y - HEX_HEIGHT / 2);
 
 			if (selectedTile === lastSelectedTile) {
 				for (const l of labels) {
 					l.setVisible(false);
+				}
+
+				for (const t of tiles) {
+					t.clearAlpha();
 				}
 
 				selectedTile = null;
@@ -146,24 +149,39 @@ export default class HexMap extends Phaser.Scene {
 				}
 			}
 
-			selectedTile?.setAlpha(0.5);
 			radius = Math.floor(Math.random() * 8) + 1;
 
-			for (const t of tilesWithinRadius(
-				radius,
-				selectedTile,
-				layer.getTilesWithin(),
-			)) {
-				(t.properties.distText as Phaser.GameObjects.Text)
-					.setVisible(true)
-					.setText(
-						hexagonalDistance(
-							selectedTile.x,
-							selectedTile.y,
-							t.x,
-							t.y,
-						).toString(),
-					);
+			for (const t of tiles) {
+				if (t === selectedTile) {
+					continue;
+				}
+
+				const dist = hexagonalDistance(
+					t.x,
+					t.y,
+					selectedTile.x,
+					selectedTile.y,
+				);
+
+				if (dist > radius) {
+					/*
+					TODO use overlay object to de-emphasize tiles to avoid sprite bleed
+					(reducing the alpha leads to "bright spots" where sprites overlap)
+					*/
+					t.setAlpha(0.5);
+				} else {
+					t.clearAlpha();
+					(t.properties.distText as Phaser.GameObjects.Text)
+						.setVisible(true)
+						.setText(
+							hexagonalDistance(
+								selectedTile.x,
+								selectedTile.y,
+								t.x,
+								t.y,
+							).toString(),
+						);
+				}
 			}
 		};
 
