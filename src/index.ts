@@ -1,7 +1,7 @@
 import HexMap from "@/scenes/hexmap";
-import Phaser from "phaser";
+import { AUTO, Game, Scale, Types } from "phaser";
 
-const config = (): Phaser.Types.Core.GameConfig => ({
+const config = (): Types.Core.GameConfig => ({
 	antialias: true,
 	fps: {
 		target: 30,
@@ -9,23 +9,23 @@ const config = (): Phaser.Types.Core.GameConfig => ({
 	height: window.innerHeight,
 	parent: document.body,
 	scale: {
-		autoCenter: Phaser.Scale.Center.CENTER_BOTH,
+		autoCenter: Scale.Center.CENTER_BOTH,
 		autoRound: true,
-		mode: Phaser.Scale.ScaleModes.NONE,
+		mode: Scale.ScaleModes.NONE,
 	},
 	scene: [HexMap],
-	type: Phaser.AUTO,
+	type: AUTO,
 	width: window.innerWidth,
 });
 
-let game: Phaser.Game;
+let game: Game;
 
 document.body.addEventListener(
 	"click",
 	async () => {
 		document.querySelector("h1")?.remove();
 		await document.body.requestFullscreen();
-		game = new Phaser.Game(config());
+		game = new Game(config());
 	},
 	{ once: true },
 );

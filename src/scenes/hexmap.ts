@@ -10,7 +10,7 @@ import terrainSprite from "@/images/terrain.png";
 import mapFile from "@/maps/map.json";
 import { clampZoom } from "@/util/camera";
 import { hexagonalDistance } from "@/util/hex";
-import { Scene, Tilemaps } from "phaser";
+import { GameObjects, Input, Scene, Tilemaps } from "phaser";
 
 export default class HexMap extends Scene {
 	constructor() {
@@ -36,7 +36,7 @@ export default class HexMap extends Scene {
 			TILE_HEIGHT,
 		)!;
 		const layer = tilemap.createLayer("Terrain", tileset, 0, 0)!;
-		const labels: Array<Phaser.GameObjects.Text> = [];
+		const labels: Array<GameObjects.Text> = [];
 
 		for (const t of layer.getTilesWithin()) {
 			t.properties.distText = this.add
@@ -65,9 +65,6 @@ export default class HexMap extends Scene {
 
 		let radius = 4;
 
-		//layer.cullCallback = () =>
-		//	tilesWithinRadius(radius, selectedTile, cullTiles(layer, cam));
-
 		// --- camera ---
 
 		const boundsLeft = TILE_WIDTH / 2;
@@ -95,22 +92,19 @@ export default class HexMap extends Scene {
 		let longPressTimer: NodeJS.Timeout;
 
 		// drag
-		this.input.on(
-			Phaser.Input.Events.POINTER_MOVE,
-			(p: Phaser.Input.Pointer) => {
-				if (!p.isDown) {
-					return;
-				}
+		this.input.on(Input.Events.POINTER_MOVE, (p: Input.Pointer) => {
+			if (!p.isDown) {
+				return;
+			}
 
-				if (p.getDistance() < 24) {
-					return;
-				}
+			if (p.getDistance() < 24) {
+				return;
+			}
 
-				clearTimeout(longPressTimer);
-				cam.scrollX -= (p.x - p.prevPosition.x) / cam.zoom;
-				cam.scrollY -= (p.y - p.prevPosition.y) / cam.zoom;
-			},
-		);
+			clearTimeout(longPressTimer);
+			cam.scrollX -= (p.x - p.prevPosition.x) / cam.zoom;
+			cam.scrollY -= (p.y - p.prevPosition.y) / cam.zoom;
+		});
 
 		let singleTapTimer: NodeJS.Timeout;
 		let wasLongPress = false;
@@ -169,7 +163,7 @@ export default class HexMap extends Scene {
 					t.tint = COLORS.TINTED;
 				} else {
 					t.tint = 0xffffff;
-					(t.properties.distText as Phaser.GameObjects.Text)
+					(t.properties.distText as GameObjects.Text)
 						.setVisible(true)
 						.setText(
 							hexagonalDistance(
@@ -184,7 +178,7 @@ export default class HexMap extends Scene {
 		};
 
 		// mouse/tap down; start long press countdown
-		this.input.on(Phaser.Input.Events.POINTER_DOWN, () => {
+		this.input.on(Input.Events.POINTER_DOWN, () => {
 			wasLongPress = false;
 			longPressTimer = setTimeout(longPressHandler, LONG_PRESS_DELAY_MS);
 		});
@@ -193,8 +187,8 @@ export default class HexMap extends Scene {
 
 		// mouse/tap up; handle single/double/long
 		this.input.on(
-			Phaser.Input.Events.GAMEOBJECT_POINTER_UP,
-			function (this: Phaser.GameObjects.GameObject, p: Phaser.Input.Pointer) {
+			Input.Events.GAMEOBJECT_POINTER_UP,
+			function (this: GameObjects.GameObject, p: Input.Pointer) {
 				const [x, y] = [p.worldX, p.worldY];
 
 				clearTimeout(longPressTimer);

@@ -4,7 +4,7 @@ import { Cameras, Tilemaps } from "phaser";
 
 /** cull tiles outside of camera bounds (with additional margin) */
 export const cullTiles = (
-	layer: Phaser.Tilemaps.TilemapLayer,
+	layer: Tilemaps.TilemapLayer,
 	cam: Cameras.Scene2D.Camera,
 ) => {
 	const bounds = cam.getBounds();
