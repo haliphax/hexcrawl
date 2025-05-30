@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="hexagonal" renderorder="right-down" width="30" height="20" tilewidth="60" tileheight="52" infinite="1" hexsidelength="26" staggeraxis="y" staggerindex="even" nextlayerid="2" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.1" orientation="hexagonal" renderorder="right-down" width="30" height="20" tilewidth="60" tileheight="52" infinite="1" hexsidelength="26" staggeraxis="y" staggerindex="even" nextlayerid="3" nextobjectid="5">
  <editorsettings>
   <export target="map.json" format="json"/>
  </editorsettings>
- <tileset firstgid="1" name="terrain_tiles" tilewidth="60" tileheight="80" tilecount="12" columns="4">
+ <tileset firstgid="1" name="terrain_tiles" tilewidth="60" tileheight="80" tilecount="12" columns="4" objectalignment="bottom">
   <image source="../images/terrain.png" width="240" height="240"/>
  </tileset>
  <layer id="1" name="Terrain" width="30" height="20" offsetx="0" offsety="18">
@@ -22,4 +22,21 @@
   </chunk>
   </data>
  </layer>
+ <objectgroup id="2" name="Objects" offsetx="0" offsety="18">
+  <object id="2" gid="12" x="1050" y="871" width="60" height="80">
+   <properties>
+    <property name="is_location" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="3" gid="12" x="1080" y="832" width="60" height="80">
+   <properties>
+    <property name="is_location" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="4" gid="12" x="1110" y="871" width="60" height="80">
+   <properties>
+    <property name="is_location" type="bool" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>
