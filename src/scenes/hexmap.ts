@@ -56,7 +56,6 @@ export default class HexMap extends Scene {
 						},
 					},
 				)
-				.setAlpha(0.9)
 				.setOrigin(0.5, 0.5)
 				.setVisible(false);
 
@@ -94,6 +93,28 @@ export default class HexMap extends Scene {
 		// drag
 		this.input.on(Input.Events.POINTER_MOVE, (p: Input.Pointer) => {
 			if (!p.isDown) {
+				if (!selectedTile) {
+					return;
+				}
+
+				labels.filter((v) => v.visible).forEach((v) => v.setVisible(false));
+				const currTile = layer.getTileAtWorldXY(
+					p.worldX,
+					p.worldY - HEX_HEIGHT / 2,
+				);
+
+				if (
+					currTile !== selectedTile &&
+					hexagonalDistance(
+						currTile.x,
+						currTile.y,
+						selectedTile.x,
+						selectedTile.y,
+					) <= radius
+				) {
+					currTile.properties.distText.setVisible(true);
+				}
+
 				return;
 			}
 
@@ -134,11 +155,14 @@ export default class HexMap extends Scene {
 					t.tint = 0xffffff;
 				}
 
+				selectedTile.clearAlpha();
 				selectedTile = null;
 				return;
 			}
 
 			if (lastSelectedTile) {
+				lastSelectedTile.clearAlpha();
+
 				for (const l of labels) {
 					l.setVisible(false);
 				}
@@ -148,6 +172,7 @@ export default class HexMap extends Scene {
 
 			for (const t of tiles) {
 				if (t === selectedTile) {
+					t.setAlpha(0.65);
 					t.tint = 0xffffff;
 					continue;
 				}
@@ -163,16 +188,14 @@ export default class HexMap extends Scene {
 					t.tint = COLORS.TINTED;
 				} else {
 					t.tint = 0xffffff;
-					(t.properties.distText as GameObjects.Text)
-						.setVisible(true)
-						.setText(
-							hexagonalDistance(
-								selectedTile.x,
-								selectedTile.y,
-								t.x,
-								t.y,
-							).toString(),
-						);
+					(t.properties.distText as GameObjects.Text).setText(
+						hexagonalDistance(
+							selectedTile.x,
+							selectedTile.y,
+							t.x,
+							t.y,
+						).toString(),
+					);
 				}
 			}
 		};
