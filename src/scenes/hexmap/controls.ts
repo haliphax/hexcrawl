@@ -112,14 +112,7 @@ function setupControls(this: HexMap) {
 				t.tint = COLORS.TINTED;
 			} else {
 				t.tint = 0xffffff;
-				(t.properties.distText as GameObjects.Text).setText(
-					hexagonalDistance(
-						selectedTile.x,
-						selectedTile.y,
-						t.x,
-						t.y,
-					).toString(),
-				);
+				(t.properties.distText as GameObjects.Text).setText(dist.toString());
 			}
 		}
 	};
@@ -138,7 +131,7 @@ function setupControls(this: HexMap) {
 
 		clearTimeout(longPressTimer);
 
-		// discard move event but account for "wiggle"
+		// discard move event but allow some "wiggle"
 		if (p.getDistance() > 24) {
 			return;
 		}
