@@ -53,6 +53,7 @@
 	"private": true,
 	"scripts": {
 		"build": "vite build src",
+		"dev": "vite dev src",
 		"prepare": "husky",
 		"start": "tsx src/server.ts"
 	},

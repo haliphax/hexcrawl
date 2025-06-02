@@ -20,7 +20,6 @@ export default class HexMap extends Scene {
 	}
 
 	preload() {
-		this.load.setBaseURL(location.toString());
 		this.load.image("terrain", terrainSprite);
 		this.load.tilemapTiledJSON("map", mapFile);
 	}
