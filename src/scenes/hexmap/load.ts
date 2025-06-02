@@ -35,8 +35,6 @@ function loadHexMap(this: HexMap) {
 
 		this.labels.push(t.properties.distText);
 	}
-
-	this.radius = 4;
 }
 
 export default loadHexMap;

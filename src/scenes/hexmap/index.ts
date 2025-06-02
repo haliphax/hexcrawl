@@ -9,7 +9,6 @@ export default class HexMap extends Scene {
 	cam: Cameras.Scene2D.Camera | null = null;
 	labels: GameObjects.Text[] = [];
 	layer: Tilemaps.TilemapLayer | null = null;
-	radius = 4;
 
 	// bound methods
 	loadHexMap = loadHexMap.bind(this);

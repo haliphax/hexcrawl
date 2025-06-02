@@ -9,6 +9,8 @@ import { hexagonalDistance } from "@/util/hex";
 import { GameObjects, Input, Tilemaps } from "phaser";
 import HexMap from ".";
 
+let radius = 4;
+
 /** Configure input controls */
 function setupControls(this: HexMap) {
 	// scroll (zoom)
@@ -39,7 +41,7 @@ function setupControls(this: HexMap) {
 					currTile.y,
 					selectedTile.x,
 					selectedTile.y,
-				) <= this.radius
+				) <= radius
 			) {
 				currTile.properties.distText.setVisible(true);
 			}
@@ -97,7 +99,7 @@ function setupControls(this: HexMap) {
 			}
 		}
 
-		this.radius = Math.floor(Math.random() * 8) + 1;
+		radius = Math.floor(Math.random() * 8) + 1;
 
 		for (const t of tiles) {
 			if (t === selectedTile) {
@@ -108,7 +110,7 @@ function setupControls(this: HexMap) {
 
 			const dist = hexagonalDistance(t.x, t.y, selectedTile.x, selectedTile.y);
 
-			if (dist > this.radius) {
+			if (dist > radius) {
 				t.tint = COLORS.TINTED;
 			} else {
 				t.tint = 0xffffff;
