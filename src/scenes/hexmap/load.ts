@@ -1,9 +1,8 @@
 import { HEX_HEIGHT, TILE_HEIGHT, TILE_WIDTH } from "@/constants";
 import HexMap from ".";
 
+/** Load map */
 function loadHexMap(this: HexMap) {
-	// --- load map ---
-
 	const tilemap = this.make.tilemap({ key: "map" });
 	const tileset = tilemap.addTilesetImage(
 		"terrain_tiles",

@@ -1,9 +1,8 @@
 import { HEX_HEIGHT, TILE_HEIGHT, TILE_WIDTH } from "@/constants";
 import HexMap from ".";
 
+/** Set up scene camera */
 function setupCamera(this: HexMap) {
-	// --- camera ---
-
 	const boundsLeft = TILE_WIDTH / 2;
 	const boundsTop = TILE_HEIGHT - HEX_HEIGHT * 0.75;
 

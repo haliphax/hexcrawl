@@ -9,10 +9,9 @@ import { hexagonalDistance } from "@/util/hex";
 import { GameObjects, Input, Tilemaps } from "phaser";
 import HexMap from ".";
 
+/** Configure input controls */
 function setupControls(this: HexMap) {
-	// --- controls ---
-
-	// scroll
+	// scroll (zoom)
 	this.input.addListener("wheel", (ev: WheelEvent) => {
 		const zoomDir = ev.deltaY > 0 ? -1 : ev.deltaY < 0 ? 1 : 0;
 		clampZoom(this.cam!, zoomDir);
@@ -20,7 +19,7 @@ function setupControls(this: HexMap) {
 
 	let longPressTimer: NodeJS.Timeout;
 
-	// drag
+	// drag (pan)
 	this.input.on(Input.Events.POINTER_MOVE, (p: Input.Pointer) => {
 		if (!p.isDown) {
 			if (!selectedTile) {
@@ -139,7 +138,7 @@ function setupControls(this: HexMap) {
 
 		clearTimeout(longPressTimer);
 
-		// ignore "wiggle"
+		// discard move event but account for "wiggle"
 		if (p.getDistance() > 24) {
 			return;
 		}

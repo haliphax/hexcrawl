@@ -11,6 +11,7 @@ export default class HexMap extends Scene {
 	layer: Tilemaps.TilemapLayer | null = null;
 	radius: number = 4;
 
+	// bound methods
 	loadHexMap = loadHexMap.bind(this);
 	setupCamera = setupCamera.bind(this);
 	setupControls = setupControls.bind(this);
