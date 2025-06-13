@@ -2,7 +2,7 @@
 
 Hex crawl game built with Phaser
 
-![image](https://github.com/user-attachments/assets/e21bfacc-ffc2-49bf-9bf3-fc7d36a857a7)
+![image](https://github.com/user-attachments/assets/9ca62bbc-b0e0-4e19-afa3-ed5cb029046e)
 
 ## Install dependencies
 
