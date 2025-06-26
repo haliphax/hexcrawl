@@ -1,0 +1,32 @@
+name: Checks
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize]
+
+  push:
+    branches: [main]
+
+  workflow_dispatch:
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.branch }}
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: haliphax/hexcrawl/.github@main
+
+      - name: ESLint
+        run: npx eslint .
+
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: haliphax/hexcrawl/.github@main
+
+      - name: Prettier
+        run: npx prettier -lu .

@@ -1,4 +1,4 @@
-name: Publish site
+name: Publish
 
 on:
   push:
@@ -10,15 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
+      - uses: haliphax/hexcrawl/.github@main
 
       - name: Build site
         run: npm run build
