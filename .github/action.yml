@@ -30,8 +30,9 @@ runs:
       id: cache-restore
       uses: actions/cache/restore@v4
       with:
-        key: ${{ steps.cache-key.outputs.CACHE_KEY }}
+        key: ${{ steps.cache-key.outputs.CACHE_KEY }}-${{ github.run_id }}
         path: ./node_modules
+        restore-keys: ${{ steps.cache-key.outputs.CACHE_KEY }}-
 
     - name: Install dependencies
       if: steps.cache-restore.outputs.cache-hit != 'true'
@@ -42,5 +43,5 @@ runs:
       if: steps.cache-restore.outputs.cache-hit != 'true'
       uses: actions/cache/save@v4
       with:
-        key: ${{ steps.cache-key.outputs.CACHE_KEY }}
+        key: ${{ steps.cache-key.outputs.CACHE_KEY }}-${{ github.run_id }}
         path: ./node_modules
